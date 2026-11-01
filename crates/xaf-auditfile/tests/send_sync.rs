@@ -31,3 +31,17 @@ fn the_error_fits_in_a_boxed_error() {
     let error: Box<dyn std::error::Error + Send + Sync> = Box::new(Error::Encoding("x".into()));
     assert!(error.to_string().contains("encoding"));
 }
+
+#[test]
+fn public_types_implement_debug() {
+    fn debug<T: std::fmt::Debug>() {}
+
+    debug::<Auditfile>();
+    debug::<AuditfileStream<BufReader<File>>>();
+    debug::<Validator>();
+    debug::<Finding>();
+    debug::<FindingKind>();
+    debug::<Location>();
+    debug::<StreamedTransaction>();
+    debug::<Error>();
+}

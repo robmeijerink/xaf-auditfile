@@ -2,6 +2,7 @@
 //! last, so everything before the first journal is small enough to read as a whole, and the
 //! transactions after it can be handed out one at a time.
 
+use std::fmt;
 use std::io::BufRead;
 use std::sync::Arc;
 
@@ -35,6 +36,14 @@ pub struct AuditfileStream<R> {
     buf: Vec<u8>,
     scratch: Vec<u8>,
     fragment: Vec<u8>,
+}
+
+impl<R> fmt::Debug for AuditfileStream<R> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("AuditfileStream")
+            .field("auditfile", &self.auditfile)
+            .finish_non_exhaustive()
+    }
 }
 
 enum State {

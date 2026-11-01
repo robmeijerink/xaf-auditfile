@@ -99,7 +99,7 @@ pub enum Error {
 
     /// The file is not well-formed XML, for example because it is truncated.
     #[error("malformed XML")]
-    Xml(quick_xml::Error),
+    Xml(#[source] quick_xml::Error),
 
     /// The text encoding of the file is not supported, or the file is not valid in the encoding
     /// it declares.

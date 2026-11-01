@@ -143,8 +143,8 @@ longer. The numbers are for one machine and synthetic data.
   with the number of transaction lines (roughly 1.3 to 2.1 KB per line) rather than with the size
   of the file. Measured on a release build with synthetic files of 300,000 lines: 0.4 GB and 2.8
   seconds for a 68 MB file with few fields per line, 0.6 GB and 5.5 seconds for a 201 MB file with
-  every field filled. A year with a million lines needs a few GB. That is fine for the yearly file
-  of a small or medium company. For the rare file that does not fit, see
+  every field filled. A year with a million lines needs roughly 1.3 to 2.1 GB. That is fine for
+  the yearly file of a small or medium company. For the rare file that does not fit, see
   [Streaming](#streaming-for-exceptionally-large-files).
 - **Untrusted input.** Entities declared in a DOCTYPE are neither expanded nor fetched (such a
   file is rejected as malformed), so a file cannot make the reader open other files or blow up

@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.1 - 2026-11-01
+
+- `Error::Xml` now reports the underlying parser error as its source.
+- Every form of UTF-16 and UTF-32 is rejected with `Error::Encoding`. Files without a byte order
+  mark or without an XML declaration used to be reported as not being an auditfile.
+- `AuditfileStream` implements `Debug`.
+- The results of `Auditfile::validate`, `Auditfile::validate_master_data` and the `Validator`
+  methods are `#[must_use]`, so dropping them is no longer silent.
+- Documentation: the memory figures are consistent and match the measurements.
+
 ## 0.1.0 - 2026-11-01
 
 First version.

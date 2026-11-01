@@ -43,6 +43,16 @@ fn missing_closing_root_tag_is_malformed_xml() {
 }
 
 #[test]
+fn malformed_xml_keeps_its_cause() {
+    use std::error::Error as _;
+
+    let truncated = &WEBSHOP[..WEBSHOP.len() / 2];
+    let error = read(truncated).unwrap_err();
+    assert_eq!(error.to_string(), "malformed XML");
+    assert!(error.source().is_some());
+}
+
+#[test]
 fn mismatched_tags_are_malformed_xml() {
     let xml = webshop_with("</header>", "</heder>");
     assert!(matches!(read(&xml), Err(Error::Xml(_))));

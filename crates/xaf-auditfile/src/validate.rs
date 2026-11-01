@@ -128,6 +128,7 @@ impl Auditfile {
     /// An inconsistent file is not an error: the result is a list of findings, and is empty when
     /// nothing was found. The findings about the master data come first, followed by those about
     /// the journals in document order.
+    #[must_use = "the findings are the result"]
     pub fn validate(&self) -> Vec<Finding> {
         let mut findings = self.validate_master_data();
         let mut validator = self.validator();
@@ -147,6 +148,7 @@ impl Auditfile {
     ///
     /// [`Auditfile::validate`] includes this. It is separate for a file that is read with
     /// [`Auditfile::stream_from_reader`], where it is combined with a [`Validator`].
+    #[must_use = "the findings are the result"]
     pub fn validate_master_data(&self) -> Vec<Finding> {
         let mut findings = Vec::new();
         self.check_duplicates(&mut findings);
@@ -301,6 +303,7 @@ impl Validator {
     ///
     /// [`Validator::check`] does this when the journal changes, so calling it is only needed for
     /// a journal without transactions.
+    #[must_use = "the findings are the result"]
     pub fn check_journal(&mut self, journal: &Journal) -> Vec<Finding> {
         self.journal = Some(journal.id.clone());
         self.transaction_nrs.clear();
@@ -320,6 +323,7 @@ impl Validator {
 
     /// Checks a transaction of the given journal. Transactions must be passed in document order,
     /// those of one journal together.
+    #[must_use = "the findings are the result"]
     pub fn check(&mut self, journal: &Journal, transaction: &Transaction) -> Vec<Finding> {
         let mut findings = if self.journal.as_ref() == Some(&journal.id) {
             Vec::new()
@@ -360,6 +364,7 @@ impl Validator {
 
     /// Compares the control totals stated in the file with the totals of the transactions that
     /// were checked.
+    #[must_use = "the findings are the result"]
     pub fn finish(self) -> Vec<Finding> {
         let Some(stated) = self.stated_totals else {
             return Vec::new();

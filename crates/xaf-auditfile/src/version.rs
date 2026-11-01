@@ -12,18 +12,13 @@ pub(crate) enum Version {
     V4,
 }
 
-/// Rejects the encodings the reader cannot parse: UTF-16 and UTF-32, recognised by a byte order
-/// mark or by the null bytes of an opening `<?`. Other encodings are handled while reading.
+/// Rejects the encodings the reader cannot parse: UTF-16 and UTF-32. They are recognised by a byte
+/// order mark, or by a null byte among the first four bytes, which no ASCII-compatible encoding
+/// has there. Other encodings are handled while reading.
 pub(crate) fn check_encoding(head: &[u8]) -> Result<(), Error> {
-    let wide = [
-        &[0xFF, 0xFE][..],
-        &[0xFE, 0xFF],
-        &[b'<', 0, b'?', 0],
-        &[0, b'<', 0, b'?'],
-    ]
-    .iter()
-    .any(|marker| head.starts_with(marker));
-    if wide {
+    let byte_order_mark = head.starts_with(&[0xFF, 0xFE]) || head.starts_with(&[0xFE, 0xFF]);
+    let null_byte = head.iter().take(4).any(|&byte| byte == 0);
+    if byte_order_mark || null_byte {
         return Err(Error::Encoding(
             "UTF-16 and UTF-32 are not supported, convert the file to UTF-8".into(),
         ));

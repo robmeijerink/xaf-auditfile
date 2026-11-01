@@ -122,3 +122,63 @@ fn the_utf_16_error_says_what_to_do() {
     let message = whole(&bytes).unwrap_err().to_string();
     assert!(message.contains("convert the file to UTF-8"), "{message}");
 }
+
+fn utf32(text: &str, bom: &[u8], to_bytes: fn(u32) -> [u8; 4]) -> Vec<u8> {
+    let mut bytes = bom.to_vec();
+    bytes.extend(text.chars().flat_map(|c| to_bytes(u32::from(c))));
+    bytes
+}
+
+#[test]
+fn every_form_of_utf_16_and_utf_32_is_an_encoding_error() {
+    let declared = with_accents("UTF-16");
+    let bare = "<auditfile xmlns=\"x\"><header/></auditfile>";
+    let files = [
+        (
+            "utf-16le bom",
+            utf16(&declared, &[0xFF, 0xFE], u16::to_le_bytes),
+        ),
+        (
+            "utf-16be bom",
+            utf16(&declared, &[0xFE, 0xFF], u16::to_be_bytes),
+        ),
+        ("utf-16le", utf16(&declared, &[], u16::to_le_bytes)),
+        ("utf-16be", utf16(&declared, &[], u16::to_be_bytes)),
+        (
+            "utf-16le without declaration",
+            utf16(bare, &[], u16::to_le_bytes),
+        ),
+        (
+            "utf-16be without declaration",
+            utf16(bare, &[], u16::to_be_bytes),
+        ),
+        (
+            "utf-32le bom",
+            utf32(&declared, &[0xFF, 0xFE, 0, 0], u32::to_le_bytes),
+        ),
+        (
+            "utf-32be bom",
+            utf32(&declared, &[0, 0, 0xFE, 0xFF], u32::to_be_bytes),
+        ),
+        ("utf-32le", utf32(&declared, &[], u32::to_le_bytes)),
+        ("utf-32be", utf32(&declared, &[], u32::to_be_bytes)),
+        (
+            "utf-32le without declaration",
+            utf32(bare, &[], u32::to_le_bytes),
+        ),
+        (
+            "utf-32be without declaration",
+            utf32(bare, &[], u32::to_be_bytes),
+        ),
+    ];
+    for (label, bytes) in files {
+        assert!(
+            matches!(whole(&bytes), Err(Error::Encoding(_))),
+            "whole: {label}"
+        );
+        assert!(
+            matches!(streamed(&bytes), Err(Error::Encoding(_))),
+            "stream: {label}"
+        );
+    }
+}

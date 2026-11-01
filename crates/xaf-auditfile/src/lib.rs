@@ -32,7 +32,7 @@
 //! # Ok::<(), xaf_auditfile::Error>(())
 //! ```
 //!
-//! The whole file is read into memory, which takes roughly 1.5 to 2 KB per transaction line. That
+//! The whole file is read into memory, which takes roughly 1.3 to 2.1 KB per transaction line. That
 //! is the normal way to use this crate. For an exceptionally large file there is
 //! [`Auditfile::stream_from_reader`], which hands out the transactions one at a time at the cost of
 //! some conveniences; see its documentation before reaching for it.

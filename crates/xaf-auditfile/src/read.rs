@@ -55,7 +55,7 @@ impl Auditfile {
     /// [`Auditfile::from_path`] are the normal route: they give the complete model, accept
     /// elements in any order and are what [`Auditfile::validate`] works on. Use streaming only for
     /// a file so large that it does not fit in memory, where the memory use of reading it whole
-    /// (roughly 1.5 to 2 KB per transaction line) is the problem.
+    /// (roughly 1.3 to 2.1 KB per transaction line) is the problem.
     ///
     /// What streaming changes:
     ///
