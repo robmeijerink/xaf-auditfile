@@ -7,6 +7,10 @@ updates:
     groups:
       cargo:
         patterns: ["*"]
+    ignore:
+      # 0.42 switches to &str events and changes how non-UTF-8 input is decoded; port before updating
+      - dependency-name: quick-xml
+        update-types: ["version-update:semver-minor"]
 
   - package-ecosystem: github-actions
     directory: /
