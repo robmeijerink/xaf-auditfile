@@ -1,0 +1,23 @@
+[package]
+name = "xaf-auditfile"
+description = "Reader for the Dutch XML Auditfile Financieel (XAF) 4.0 with a typed domain model"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+keywords.workspace = true
+categories.workspace = true
+readme = "../../README.md"
+
+[lints]
+workspace = true
+
+[dependencies]
+quick-xml = { version = "0.41.0", features = ["serialize", "encoding"] }
+rust_decimal = { version = "1.43.0", default-features = false, features = ["std"] }
+serde = { version = "1.0.229", features = ["derive"] }
+thiserror = "2.0.21"
+time = { version = "0.3.47", default-features = false, features = ["std"] }
